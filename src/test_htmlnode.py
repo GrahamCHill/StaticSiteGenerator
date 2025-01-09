@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HtmlNode
+from htmlnode import HtmlNode, LeafNode
 
 
 class TestTextNode(unittest.TestCase):
@@ -56,6 +56,28 @@ class TestTextNode(unittest.TestCase):
         parent_node = HtmlNode(tag="div", children=[child_node], props={"class": "container"})
         self.assertEqual(len(parent_node.children), 1)  # The parent node has one child.
         self.assertEqual(parent_node.props_to_html(), 'class="container"')
+
+class TestLeafNode(unittest.TestCase):
+    def test_leaf_node_raw_text(self):
+        node = LeafNode(None, "Raw text")
+        self.assertEqual(node.to_html(), "Raw text")
+
+    def test_leaf_node_with_tag(self):
+        node = LeafNode("p", "This is a paragraph.")
+        self.assertEqual(node.to_html(), "<p>This is a paragraph.</p>")
+
+    def test_leaf_node_with_tag_and_props(self):
+        node = LeafNode("a", "Click me!", {"href": "https://www.google.com"})
+        self.assertEqual(node.to_html(), '<a href="https://www.google.com">Click me!</a>')
+
+    def test_leaf_node_missing_value(self):
+        with self.assertRaises(ValueError):
+            node = LeafNode("p", None)
+
+    def test_leaf_node_missing_tag_and_value(self):
+        with self.assertRaises(ValueError):
+            node = LeafNode(None, None)
+
 
 
 if __name__ == "__main__":
