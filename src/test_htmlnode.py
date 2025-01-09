@@ -72,11 +72,11 @@ class TestLeafNode(unittest.TestCase):
 
     def test_leaf_node_missing_value(self):
         with self.assertRaises(ValueError):
-            node = LeafNode("p", None)
+            LeafNode("p", None)
 
     def test_leaf_node_missing_tag_and_value(self):
         with self.assertRaises(ValueError):
-            node = LeafNode(None, None)
+            LeafNode(None, None)
 
 
 class TestParentNode(unittest.TestCase):
@@ -152,6 +152,8 @@ class TestParentNode(unittest.TestCase):
             node.to_html(),
             "<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>",
         )
+
+
 
 
 if __name__ == "__main__":

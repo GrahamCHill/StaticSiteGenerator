@@ -24,7 +24,11 @@ class HtmlNode:
 
 class LeafNode(HtmlNode):
     def __init__(self, tag, value, props=None):
-        if not value:
+        if tag == "img":
+            if not props or "src" not in props or "alt" not in props:
+                raise ValueError('img tag must have "src" and "alt" properties.')
+            value = ""  # Ensure value is empty for img tags
+        if not value and tag != "img":
             raise ValueError("LeafNode must have either a tag or a value.")
         super().__init__(tag=tag, value=value, children=None, props=props)
 
