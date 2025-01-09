@@ -32,7 +32,7 @@ class TestTextNode(unittest.TestCase):
         node8 = TextNode("This is a text node", TextType.ITALIC, None)
         self.assertIsNot(node7, node8)
 
-    def test_str(self):
+    def test_is_same(self):
         node = TextNode("This is a text node", TextType.BOLD)
         node2 = node
         self.assertIs(node, node2)
