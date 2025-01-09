@@ -1,6 +1,6 @@
 import unittest
 
-from htmlnode import HtmlNode, LeafNode
+from htmlnode import HtmlNode, LeafNode, ParentNode
 
 
 class TestTextNode(unittest.TestCase):
@@ -78,6 +78,80 @@ class TestLeafNode(unittest.TestCase):
         with self.assertRaises(ValueError):
             node = LeafNode(None, None)
 
+
+class TestParentNode(unittest.TestCase):
+    def test_parent_node_with_children(self):
+        node = ParentNode(
+            "p",
+            [
+                LeafNode("b", "Bold text"),
+                LeafNode(None, "Normal text"),
+                LeafNode("i", "italic text"),
+                LeafNode(None, "Normal text"),
+            ],
+        )
+        self.assertEqual(
+            node.to_html(),
+            "<p><b>Bold text</b>Normal text<i>italic text</i>Normal text</p>",
+        )
+
+    def test_nested_parent_nodes(self):
+        node = ParentNode(
+            "div",
+            [
+                ParentNode(
+                    "p",
+                    [
+                        LeafNode("b", "Bold text"),
+                        LeafNode(None, "Normal text"),
+                    ],
+                ),
+                ParentNode(
+                    "p",
+                    [
+                        LeafNode("i", "italic text"),
+                        LeafNode(None, "Normal text"),
+                    ],
+                ),
+            ],
+        )
+        self.assertEqual(
+            node.to_html(),
+            "<div><p><b>Bold text</b>Normal text</p><p><i>italic text</i>Normal text</p></div>",
+        )
+
+    def test_parent_node_without_children(self):
+        with self.assertRaises(ValueError):
+            ParentNode("p", [])
+
+    def test_parent_node_missing_tag(self):
+        with self.assertRaises(ValueError):
+            ParentNode(None, [LeafNode("b", "Bold text")])
+
+    def test_parent_node_with_props(self):
+        node = ParentNode(
+            "div",
+            [LeafNode("span", "Hello, world!")],
+            {"class": "container", "id": "main"},
+        )
+        self.assertEqual(
+            node.to_html(),
+            '<div class="container" id="main"><span>Hello, world!</span></div>',
+        )
+
+    def test_parent_node_with_empty_props(self):
+        node = ParentNode(
+            "ul",
+            [
+                LeafNode("li", "Item 1"),
+                LeafNode("li", "Item 2"),
+                LeafNode("li", "Item 3"),
+            ],
+        )
+        self.assertEqual(
+            node.to_html(),
+            "<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>",
+        )
 
 
 if __name__ == "__main__":
