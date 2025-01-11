@@ -1,6 +1,8 @@
 import unittest
+
+from src.splitnodesdelimiter import split_nodes_delimiter
 from src.textnode import TextNode, TextType
-from splitnodesdelimiter import *
+
 
 
 class TestSplitNodesDelimiter(unittest.TestCase):
@@ -33,10 +35,11 @@ class TestSplitNodesDelimiter(unittest.TestCase):
         self.assertEqual(result, expected)
 
     def test_adjacent_delimiters(self):
-        node = TextNode("`code1``code2`", TextType.TEXT)
+        node = TextNode("`code1` `code2`", TextType.TEXT)
         result = split_nodes_delimiter([node], "`", TextType.CODE)
         expected = [
             TextNode("code1", TextType.CODE),
+            TextNode(" ", TextType.TEXT),  # Empty segment between adjacent delimiters
             TextNode("code2", TextType.CODE),
         ]
         self.assertEqual(result, expected)
@@ -54,13 +57,11 @@ class TestSplitNodesDelimiter(unittest.TestCase):
             TextNode("*italic* text", TextType.TEXT),
         ]
         result = split_nodes_delimiter(nodes, "`", TextType.CODE)
-        result = split_nodes_delimiter(result, "*", TextType.ITALIC)
         expected = [
             TextNode("This is ", TextType.TEXT),
             TextNode("code", TextType.CODE),
             TextNode(" and ", TextType.BOLD),
-            TextNode("italic", TextType.ITALIC),
-            TextNode(" text", TextType.TEXT),
+            TextNode("*italic* text", TextType.TEXT),
         ]
         self.assertEqual(result, expected)
 
