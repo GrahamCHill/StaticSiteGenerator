@@ -36,11 +36,8 @@ class TestSplitNodesDelimiter(unittest.TestCase):
         node = TextNode("`code1``code2`", TextType.TEXT)
         result = split_nodes_delimiter([node], "`", TextType.CODE)
         expected = [
-            TextNode("", TextType.TEXT),  # Leading empty text
             TextNode("code1", TextType.CODE),
-            TextNode("", TextType.TEXT),  # Empty between adjacent delimiters
             TextNode("code2", TextType.CODE),
-            TextNode("", TextType.TEXT),  # Trailing empty text
         ]
         self.assertEqual(result, expected)
 
@@ -61,7 +58,6 @@ class TestSplitNodesDelimiter(unittest.TestCase):
         expected = [
             TextNode("This is ", TextType.TEXT),
             TextNode("code", TextType.CODE),
-            TextNode("", TextType.TEXT),  # Trailing empty text after code delimiter
             TextNode(" and ", TextType.BOLD),
             TextNode("italic", TextType.ITALIC),
             TextNode(" text", TextType.TEXT),

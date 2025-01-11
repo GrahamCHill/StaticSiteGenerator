@@ -17,12 +17,13 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
         if node.text_type == TextType.TEXT:
             parts = node.text.split(delimiter)
             for i, part in enumerate(parts):
-                # Only add non-empty text or delimited parts
-                if part:
-                    current_type = text_type if i % 2 == 1 else TextType.TEXT
-                    new_nodes.append(TextNode(part, current_type))
+                # Handle empty parts between delimiters
+                if i % 2 == 1:  # Delimited part
+                    new_nodes.append(TextNode(part, text_type))
+                elif part:  # Non-empty text outside delimiters
+                    new_nodes.append(TextNode(part, TextType.TEXT))
         else:
+            # Non-text nodes are directly appended
             new_nodes.append(node)
 
     return new_nodes
-
